@@ -66,6 +66,9 @@ export default function NuevoProtagonistPage() {
               <Field label="Teléfono de contacto (familiar)">
                 <input name="telefono_contacto" type="tel" className={inputCls} />
               </Field>
+              <Field label="Religión">
+                <input name="religion" className={inputCls} />
+              </Field>
             </div>
           </div>
 

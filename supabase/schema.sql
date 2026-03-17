@@ -39,6 +39,7 @@ ALTER TABLE beneficiarios
     CHECK (rama IN ('Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers'));
 ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS mail_contacto TEXT;
 ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS telefono_contacto TEXT;
+ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS religion TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_activo ON beneficiarios(activo);
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_rama ON beneficiarios(rama);
@@ -73,8 +74,8 @@ CREATE TABLE IF NOT EXISTS campamentos (
   fecha_inicio DATE NOT NULL,
   fecha_fin DATE NOT NULL,
   precio_estimado DECIMAL(10,2),
-  rama TEXT NOT NULL DEFAULT 'Ambas'
-    CHECK (rama IN ('Lobatos y Lobeznas', 'Ambas')),
+  rama TEXT NOT NULL DEFAULT 'Grupal'
+    CHECK (rama IN ('Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers', 'Grupal', 'Ambas')),
   descripcion TEXT,
   activo BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -82,9 +83,8 @@ CREATE TABLE IF NOT EXISTS campamentos (
 
 -- Si la tabla ya existe, migrar rama:
 ALTER TABLE campamentos DROP CONSTRAINT IF EXISTS campamentos_rama_check;
-UPDATE campamentos SET rama = 'Lobatos y Lobeznas' WHERE rama IN ('Lobatos', 'Lobeznos');
 ALTER TABLE campamentos ADD CONSTRAINT campamentos_rama_check
-  CHECK (rama IN ('Lobatos y Lobeznas', 'Ambas'));
+  CHECK (rama IN ('Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers', 'Grupal', 'Ambas'));
 
 ALTER TABLE campamentos ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow all on campamentos" ON campamentos;
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS pagos (
   concepto TEXT NOT NULL DEFAULT 'Cuota de membresía',
   metodo_pago TEXT NOT NULL CHECK (metodo_pago IN ('Efectivo', 'Transferencia', 'Cheque')),
   tipo TEXT NOT NULL DEFAULT 'mensual'
-    CHECK (tipo IN ('mensual', 'trimestral', 'campamento', 'nota_credito')),
+    CHECK (tipo IN ('mensual', 'trimestral', 'campamento')),
   meses_cubiertos TEXT[],
   campamento_id UUID,
   notas TEXT,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS pagos (
 
 -- Si ya existe, agregar columnas:
 ALTER TABLE pagos ADD COLUMN IF NOT EXISTS tipo TEXT NOT NULL DEFAULT 'mensual'
-  CHECK (tipo IN ('mensual', 'trimestral', 'campamento', 'nota_credito'));
+  CHECK (tipo IN ('mensual', 'trimestral', 'campamento'));
 ALTER TABLE pagos ADD COLUMN IF NOT EXISTS meses_cubiertos TEXT[];
 ALTER TABLE pagos ADD COLUMN IF NOT EXISTS campamento_id UUID REFERENCES campamentos(id) ON DELETE SET NULL;
 
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS comprobantes (
   protagonista_id UUID NOT NULL REFERENCES beneficiarios(id) ON DELETE CASCADE,
   pago_id UUID REFERENCES pagos(id) ON DELETE SET NULL,
   tipo TEXT NOT NULL DEFAULT 'cuota_mensual'
-    CHECK (tipo IN ('cuota_mensual', 'cuota_trimestral', 'campamento', 'nota_credito')),
+    CHECK (tipo IN ('cuota_mensual', 'cuota_trimestral', 'campamento')),
   numero_comprobante BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
   fecha DATE NOT NULL DEFAULT CURRENT_DATE,
   monto DECIMAL(10,2) NOT NULL,

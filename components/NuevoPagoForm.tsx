@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { MdEdit } from 'react-icons/md'
 import { createPago } from '@/lib/actions'
-import { MESES, METODOS_PAGO, TIPOS_PAGO } from '@/lib/types'
+import { MESES, MESES_SCOUT, METODOS_PAGO, TIPOS_PAGO } from '@/lib/types'
 
 const TRIMESTRES = [
   { label: 'Abril - Mayo - Junio',        meses: [4, 5, 6],  periodoMes: 4  },
@@ -90,7 +90,6 @@ export function NuevoPagoForm({
   function conceptoDefault(t: string, campId?: string) {
     if (t === 'mensual') return 'Cuota mensual'
     if (t === 'trimestral') return 'Cuota trimestral'
-    if (t === 'nota_credito') return ''
     if (t === 'campamento') {
       const camp = campamentos.find((c) => c.id === (campId ?? campamentoId))
       return camp ? `Campamento ${camp.nombre}` : 'Campamento'
@@ -200,9 +199,9 @@ export function NuevoPagoForm({
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Mes <span className="text-brand-red">*</span>
             </label>
-            <select name="periodo_mes" required defaultValue={currentMonth} className={`${inputCls} bg-white`}>
-              {MESES.map((mes, i) => (
-                <option key={i + 1} value={i + 1}>{mes}</option>
+            <select name="periodo_mes" required defaultValue={MESES_SCOUT.includes(currentMonth) ? currentMonth : MESES_SCOUT[0]} className={`${inputCls} bg-white`}>
+              {MESES_SCOUT.map((m) => (
+                <option key={m} value={m}>{MESES[m - 1]}</option>
               ))}
             </select>
           </div>
@@ -261,35 +260,6 @@ export function NuevoPagoForm({
         </>
       )}
 
-      {/* Período — nota_credito */}
-      {tipo === 'nota_credito' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Mes <span className="text-brand-red">*</span>
-            </label>
-            <select name="periodo_mes" required defaultValue={currentMonth} className={`${inputCls} bg-white`}>
-              {MESES.map((mes, i) => (
-                <option key={i + 1} value={i + 1}>{mes}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Año <span className="text-brand-red">*</span>
-            </label>
-            <input
-              name="periodo_anio"
-              type="number"
-              required
-              defaultValue={currentYear}
-              min={2000}
-              max={2100}
-              className={inputCls}
-            />
-          </div>
-        </div>
-      )}
 
       {/* Monto */}
       <div>

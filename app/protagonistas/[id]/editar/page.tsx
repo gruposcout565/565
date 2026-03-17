@@ -80,6 +80,9 @@ export default async function EditarProtagonistPage({
               <Field label="Teléfono de contacto">
                 <input name="telefono_contacto" type="tel" defaultValue={p.telefono_contacto || ''} className={inputCls} />
               </Field>
+              <Field label="Religión">
+                <input name="religion" defaultValue={(p as unknown as { religion?: string }).religion || ''} className={inputCls} />
+              </Field>
             </div>
           </div>
 

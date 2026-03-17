@@ -4,10 +4,10 @@
 
 export type Rama = 'Lobatos y Lobeznas' | 'Scouts' | 'Caminantes' | 'Rovers'
 export type TipoCuota = 'mensual' | 'trimestral'
-export type RamaCampamento = 'Lobatos y Lobeznas' | 'Ambas'
+export type RamaCampamento = 'Lobatos y Lobeznas' | 'Scouts' | 'Caminantes' | 'Rovers' | 'Grupal'
 export type MetodoPago = 'Efectivo' | 'Transferencia' | 'Cheque'
-export type TipoPago = 'mensual' | 'trimestral' | 'campamento' | 'nota_credito'
-export type TipoComprobante = 'cuota_mensual' | 'cuota_trimestral' | 'campamento' | 'nota_credito'
+export type TipoPago = 'mensual' | 'trimestral' | 'campamento'
+export type TipoComprobante = 'cuota_mensual' | 'cuota_trimestral' | 'campamento'
 export type RolUsuario = 'admin' | 'educador' | 'readonly'
 export type EstadoPago = 'al_dia' | 'adeuda' | 'adelantado'
 
@@ -16,13 +16,12 @@ export type EstadoPago = 'al_dia' | 'adeuda' | 'adelantado'
 // ============================================================
 
 export const RAMAS: Rama[] = ['Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers']
-export const RAMAS_CAMPAMENTO: RamaCampamento[] = ['Lobatos y Lobeznas', 'Ambas']
+export const RAMAS_CAMPAMENTO: RamaCampamento[] = ['Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers', 'Grupal']
 export const METODOS_PAGO: MetodoPago[] = ['Efectivo', 'Transferencia', 'Cheque']
 export const TIPOS_PAGO: { value: TipoPago; label: string }[] = [
   { value: 'mensual', label: 'Mensual' },
   { value: 'trimestral', label: 'Trimestral' },
   { value: 'campamento', label: 'Campamento' },
-  { value: 'nota_credito', label: 'Nota de crédito' },
 ]
 export const ROLES_USUARIO: RolUsuario[] = ['admin', 'educador', 'readonly']
 export const MESES = [

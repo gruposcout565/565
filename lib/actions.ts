@@ -36,6 +36,7 @@ export async function createBeneficiario(formData: FormData) {
     telefono: (formData.get('telefono') as string) || null,
     mail_contacto: (formData.get('mail_contacto') as string) || null,
     telefono_contacto: (formData.get('telefono_contacto') as string) || null,
+    religion: (formData.get('religion') as string) || null,
     rama: formData.get('rama') as Rama,
     fecha_ingreso: formData.get('fecha_ingreso') as string,
     tipo_cuota: (formData.get('tipo_cuota') as TipoCuota) || 'mensual',
@@ -62,6 +63,7 @@ export async function updateBeneficiario(id: string, formData: FormData) {
       telefono: (formData.get('telefono') as string) || null,
       mail_contacto: (formData.get('mail_contacto') as string) || null,
       telefono_contacto: (formData.get('telefono_contacto') as string) || null,
+      religion: (formData.get('religion') as string) || null,
       rama: ramaNueva,
       fecha_ingreso: formData.get('fecha_ingreso') as string,
       tipo_cuota: (formData.get('tipo_cuota') as TipoCuota) || 'mensual',
@@ -221,7 +223,7 @@ export async function createCampamento(formData: FormData) {
 
   // Auto-inscribir protagonistas activos de la rama correspondiente
   let query = supabase.from('beneficiarios').select('id').eq('activo', true)
-  if (rama !== 'Ambas') query = query.eq('rama', rama)
+  if (rama !== 'Grupal' && rama !== 'Ambas') query = query.eq('rama', rama)
   const { data: protagonistas } = await query
 
   if (protagonistas?.length) {
