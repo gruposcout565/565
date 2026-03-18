@@ -76,10 +76,14 @@ CREATE TABLE IF NOT EXISTS campamentos (
   precio_estimado DECIMAL(10,2),
   rama TEXT NOT NULL DEFAULT 'Grupal'
     CHECK (rama IN ('Lobatos y Lobeznas', 'Scouts', 'Caminantes', 'Rovers', 'Grupal', 'Ambas')),
+  lugar TEXT,
   descripcion TEXT,
   activo BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Si la tabla ya existe, agregar columna lugar si no existe:
+ALTER TABLE campamentos ADD COLUMN IF NOT EXISTS lugar TEXT;
 
 -- Si la tabla ya existe, migrar rama:
 ALTER TABLE campamentos DROP CONSTRAINT IF EXISTS campamentos_rama_check;
@@ -292,3 +296,40 @@ CREATE POLICY "Allow all on cuotas_pendientes" ON cuotas_pendientes FOR ALL USIN
 INSERT INTO cuota_config (monto, monto_trimestral_mes, descripcion)
 SELECT 0, 0, 'Monto inicial'
 WHERE NOT EXISTS (SELECT 1 FROM cuota_config);
+
+-- ============================================================
+-- MIGRATION 1M — documentos_protagonista
+-- Almacena archivos (PDF/imagen) asociados a un protagonista
+-- ============================================================
+
+-- Crear bucket en Supabase Storage
+-- Límite por archivo: 50 MB (default Supabase Free) | Total: 1 GB
+INSERT INTO storage.buckets (id, name, public, allowed_mime_types)
+VALUES (
+  'documentos',
+  'documentos',
+  false,
+  ARRAY['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- Política de acceso al bucket (usuarios autenticados)
+DROP POLICY IF EXISTS "Allow all on documentos bucket" ON storage.objects;
+CREATE POLICY "Allow all on documentos bucket" ON storage.objects
+  FOR ALL USING (bucket_id = 'documentos') WITH CHECK (bucket_id = 'documentos');
+
+-- Tabla de metadatos de documentos
+CREATE TABLE IF NOT EXISTS documentos_protagonista (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  protagonista_id UUID NOT NULL REFERENCES beneficiarios(id) ON DELETE CASCADE,
+  nombre TEXT NOT NULL,
+  storage_path TEXT NOT NULL,
+  tipo TEXT NOT NULL CHECK (tipo IN ('pdf', 'imagen')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_documentos_protagonista ON documentos_protagonista(protagonista_id);
+ALTER TABLE documentos_protagonista ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all on documentos_protagonista" ON documentos_protagonista;
+CREATE POLICY "Allow all on documentos_protagonista" ON documentos_protagonista
+  FOR ALL USING (true) WITH CHECK (true);

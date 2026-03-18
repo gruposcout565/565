@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/franm/Desktop/565 -type f -name *camp* -o -name *campamento*)"
+    ]
+  }
+}

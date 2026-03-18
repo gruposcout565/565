@@ -53,6 +53,11 @@ export default function NuevoCampamentoPage() {
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Lugar</label>
+            <input name="lugar" className={inputCls} placeholder="Ej: Parque Provincial Ernesto Tornquist" />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
             <textarea name="descripcion" rows={3} className={`${inputCls} resize-none`} />
           </div>

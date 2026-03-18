@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { MdArrowBack, MdAdd, MdSwapHoriz, MdCheck, MdPriorityHigh, MdChevronRight, MdAccessTime, MdWarning } from 'react-icons/md'
-import { getBeneficiario, getPagosByBeneficiario, getHistorialRama, getCuotasPendientesByBeneficiario, getEstadoCuenta, getInscripcionesByBeneficiario } from '@/lib/data'
+import { getBeneficiario, getPagosByBeneficiario, getHistorialRama, getCuotasPendientesByBeneficiario, getEstadoCuenta, getInscripcionesByBeneficiario, getDocumentosByProtagonista } from '@/lib/data'
 import { EstadoCuentaView } from '@/components/EstadoCuenta'
 import { deleteBeneficiario, desInscribirCampamento } from '@/lib/actions'
+import { DocumentosSection } from '@/components/DocumentosSection'
 import {
   RAMA_COLORS, ESTADO_PAGO_STYLES, MESES, MESES_SCOUT,
   calcularEstadoPago, type Rama, type EstadoPago,
@@ -15,13 +16,14 @@ export default async function ProtagonistDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const [protagonista, pagos, historialRama, cuotasPendientes, estadoCuenta, inscripciones] = await Promise.all([
+  const [protagonista, pagos, historialRama, cuotasPendientes, estadoCuenta, inscripciones, documentos] = await Promise.all([
     getBeneficiario(id),
     getPagosByBeneficiario(id),
     getHistorialRama(id),
     getCuotasPendientesByBeneficiario(id),
     getEstadoCuenta(id),
     getInscripcionesByBeneficiario(id),
+    getDocumentosByProtagonista(id),
   ])
 
   const deleteWithId = deleteBeneficiario.bind(null, id)
@@ -300,6 +302,9 @@ export default async function ProtagonistDetailPage({
               </div>
             )}
           </div>
+
+          {/* Documentación */}
+          <DocumentosSection protagonistaId={id} documentos={documentos} />
         </div>
       </div>
     </div>

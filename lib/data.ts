@@ -465,6 +465,31 @@ export async function getNotasCreditoByProtagonista(protagonistaId: string) {
 }
 
 // ============================================================
+// DOCUMENTOS PROTAGONISTA
+// ============================================================
+
+export async function getDocumentosByProtagonista(protagonistaId: string) {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('documentos_protagonista')
+    .select('*')
+    .eq('protagonista_id', protagonistaId)
+    .order('created_at', { ascending: false })
+  if (error) dbError(error)
+
+  const docs = data || []
+  const docsConUrl = await Promise.all(
+    docs.map(async (doc) => {
+      const { data: signed } = await supabase.storage
+        .from('documentos')
+        .createSignedUrl(doc.storage_path, 3600)
+      return { ...doc, url: signed?.signedUrl ?? '' }
+    })
+  )
+  return docsConUrl
+}
+
+// ============================================================
 // DASHBOARD
 // ============================================================
 

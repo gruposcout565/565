@@ -47,6 +47,9 @@ export default async function CampamentoDetailPage({
         {campamento.precio_estimado && (
           <InfoCard label="Precio estimado" value={`$${Number(campamento.precio_estimado).toLocaleString('es-AR', { minimumFractionDigits: 2 })}`} />
         )}
+        {campamento.lugar && (
+          <InfoCard label="Lugar" value={campamento.lugar} />
+        )}
         {diasRestantes > 0 && (
           <InfoCard label="Días restantes" value={`${diasRestantes} días`} highlight />
         )}

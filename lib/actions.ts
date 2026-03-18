@@ -214,6 +214,7 @@ export async function createCampamento(formData: FormData) {
       fecha_fin: formData.get('fecha_fin') as string,
       precio_estimado: precioEstimado || null,
       rama,
+      lugar: (formData.get('lugar') as string) || null,
       descripcion: (formData.get('descripcion') as string) || null,
       activo: true,
     })
@@ -240,6 +241,47 @@ export async function createCampamento(formData: FormData) {
   revalidatePath('/protagonistas')
   revalidatePath('/')
   redirect('/campamentos')
+}
+
+// ============================================================
+// DOCUMENTOS PROTAGONISTA
+// ============================================================
+
+export async function uploadDocumento(formData: FormData) {
+  const supabase = await createServerClient()
+  const protagonistaId = formData.get('protagonista_id') as string
+  const file = formData.get('file') as File
+  if (!file || file.size === 0) throw new Error('No se seleccionó ningún archivo')
+
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+  const tipo = ext === 'pdf' ? 'pdf' : 'imagen'
+  const storagePath = `${protagonistaId}/${Date.now()}-${file.name}`
+
+  const { error: storageError } = await supabase.storage
+    .from('documentos')
+    .upload(storagePath, file)
+  if (storageError) throw new Error(`Error al subir archivo: ${storageError.message}`)
+
+  const { error } = await supabase.from('documentos_protagonista').insert({
+    protagonista_id: protagonistaId,
+    nombre: file.name,
+    storage_path: storagePath,
+    tipo,
+  })
+  if (error) {
+    await supabase.storage.from('documentos').remove([storagePath])
+    dbError(error)
+  }
+
+  revalidatePath(`/protagonistas/${protagonistaId}`)
+}
+
+export async function deleteDocumento(id: string, storagePath: string, protagonistaId: string) {
+  const supabase = await createServerClient()
+  await supabase.storage.from('documentos').remove([storagePath])
+  const { error } = await supabase.from('documentos_protagonista').delete().eq('id', id)
+  if (error) dbError(error)
+  revalidatePath(`/protagonistas/${protagonistaId}`)
 }
 
 // ============================================================
@@ -370,6 +412,7 @@ export async function updateCampamento(id: string, formData: FormData) {
       fecha_fin: formData.get('fecha_fin') as string,
       precio_estimado: parseFloat(formData.get('precio_estimado') as string) || null,
       rama: formData.get('rama') as string,
+      lugar: (formData.get('lugar') as string) || null,
       descripcion: (formData.get('descripcion') as string) || null,
       activo: formData.get('activo') !== 'false',
     })

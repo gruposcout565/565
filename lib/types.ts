@@ -113,8 +113,22 @@ export interface Campamento {
   fecha_fin: string
   precio_estimado?: number
   rama: RamaCampamento
+  lugar?: string
   descripcion?: string
   activo: boolean
+  created_at: string
+}
+
+// ============================================================
+// INTERFACES — DOCUMENTOS
+// ============================================================
+
+export interface DocumentoProtagonista {
+  id: string
+  protagonista_id: string
+  nombre: string
+  storage_path: string
+  tipo: 'pdf' | 'imagen'
   created_at: string
 }
 
