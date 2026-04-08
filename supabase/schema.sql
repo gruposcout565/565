@@ -40,6 +40,9 @@ ALTER TABLE beneficiarios
 ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS mail_contacto TEXT;
 ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS telefono_contacto TEXT;
 ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS religion TEXT;
+ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS fecha_nacimiento DATE;
+ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS direccion TEXT;
+ALTER TABLE beneficiarios ADD COLUMN IF NOT EXISTS barrio TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_activo ON beneficiarios(activo);
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_rama ON beneficiarios(rama);

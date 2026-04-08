@@ -31,6 +31,12 @@ export default function NuevoProtagonistPage() {
             <Field label="DNI / Documento">
               <input name="dni" className={inputCls} />
             </Field>
+            <Field label="Fecha de Nacimiento">
+              <input name="fecha_nacimiento" type="date" className={inputCls} />
+            </Field>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Rama" required>
               <select name="rama" required className={`${inputCls} bg-white`}>
                 {RAMAS.map((r) => <option key={r} value={r}>{r}</option>)}
@@ -68,6 +74,12 @@ export default function NuevoProtagonistPage() {
               </Field>
               <Field label="Religión">
                 <input name="religion" className={inputCls} />
+              </Field>
+              <Field label="Dirección">
+                <input name="direccion" className={inputCls} />
+              </Field>
+              <Field label="Barrio">
+                <input name="barrio" className={inputCls} />
               </Field>
             </div>
           </div>

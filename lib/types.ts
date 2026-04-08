@@ -53,10 +53,13 @@ export interface Protagonista {
   nombre: string
   apellido: string
   dni?: string
+  fecha_nacimiento?: string
   email?: string
   telefono?: string
   mail_contacto?: string
   telefono_contacto?: string
+  direccion?: string
+  barrio?: string
   rama: Rama
   fecha_ingreso: string
   activo: boolean

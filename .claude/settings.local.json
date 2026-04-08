@@ -4,7 +4,11 @@
       "Bash(find /c/Users/franm/Desktop/565 -type f -name *camp* -o -name *campamento*)",
       "Bash(grep -r \"whatsapp\\\\|wsp\\\\|telegram\\\\|twillio\\\\|sendgrid\" /Users/franciscomansilla/Desktop/565 --include=*.ts --include=*.tsx --include=*.js --include=*.json)",
       "Bash(find /Users/franciscomansilla/Desktop/565 -not -path */node_modules/* -not -path */.next/* -not -path */.git/* -type f -name *.ts -o -name *.tsx -o -name *.sql)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Read(//Users/franciscomansilla/Downloads/**)",
+      "Bash(python3 -c \":*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)"
     ]
   }
 }

@@ -102,6 +102,11 @@ export default async function ProtagonistDetailPage({
             <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Información</h2>
             <dl className="space-y-3">
               <InfoItem label="DNI" value={protagonista.dni || '—'} />
+              {protagonista.fecha_nacimiento && (
+                <InfoItem label="Fecha de nacimiento" value={new Date(protagonista.fecha_nacimiento + 'T00:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })} />
+              )}
+              {protagonista.direccion && <InfoItem label="Dirección" value={protagonista.direccion} />}
+              {protagonista.barrio && <InfoItem label="Barrio" value={protagonista.barrio} />}
               <InfoItem label="Email" value={protagonista.email || '—'} />
               <InfoItem label="Teléfono" value={protagonista.telefono || '—'} />
               {protagonista.mail_contacto && <InfoItem label="Mail contacto" value={protagonista.mail_contacto} />}

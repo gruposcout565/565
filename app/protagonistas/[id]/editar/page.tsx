@@ -41,6 +41,12 @@ export default async function EditarProtagonistPage({
             <Field label="DNI / Documento">
               <input name="dni" defaultValue={p.dni || ''} className={inputCls} />
             </Field>
+            <Field label="Fecha de Nacimiento">
+              <input name="fecha_nacimiento" type="date" defaultValue={p.fecha_nacimiento || ''} className={inputCls} />
+            </Field>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Rama" required>
               <select name="rama" required defaultValue={p.rama} className={`${inputCls} bg-white`}>
                 {RAMAS.map((r) => <option key={r} value={r}>{r}</option>)}
@@ -82,6 +88,12 @@ export default async function EditarProtagonistPage({
               </Field>
               <Field label="Religión">
                 <input name="religion" defaultValue={(p as unknown as { religion?: string }).religion || ''} className={inputCls} />
+              </Field>
+              <Field label="Dirección">
+                <input name="direccion" defaultValue={p.direccion || ''} className={inputCls} />
+              </Field>
+              <Field label="Barrio">
+                <input name="barrio" defaultValue={p.barrio || ''} className={inputCls} />
               </Field>
             </div>
           </div>
